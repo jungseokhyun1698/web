@@ -1,0 +1,84 @@
+package com.example.kopoproject.controller;
+
+import com.example.kopoproject.dto.ArticleForm;
+import com.example.kopoproject.entity.Article;
+import com.example.kopoproject.repository.ArticleRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+@Slf4j
+public class ArticleController {
+    @Autowired // 의존성 주입 애노테이션 DI(Dependency Injection)
+    private ArticleRepository articleRepository;
+    @GetMapping("/article/new")
+    public String newArticleForm() {
+        return "articles/new";
+    }
+    @PostMapping("/article/create") // 생성 요청
+    public String newArticle(ArticleForm articleForm){ // DTO로 데이터를 수집
+        log.info(articleForm.toString());
+        // DTO -> Entity
+        Article article = articleForm.toEntity();
+        log.info(article.toString());
+        // Repo -> DB save
+        Article saved = articleRepository.save(article);
+        log.info(saved.toString());
+        // View
+        return "redirect:/article/" + saved.getId(); // 리다이렉트 redirect:주소
+    }
+    @GetMapping("/article/{number}")
+    public String article(@PathVariable Long number, Model model){
+        // @PathVariable = 요청 변수 수집
+        log.info("number : " + number);
+        // 게시글 번호를 확인해서 view 처리
+
+        // id 값을 조회 - DB
+        Article saved = articleRepository.findById(number).orElse(null);
+        // addAttr ~ 활용해서 모델에 데이터 등록
+        model.addAttribute("article", saved);
+        // view 화면에 보여주기
+        return "articles/show";
+    }
+    @GetMapping("/articles")
+    public String articleAll(Model model){
+        // 다운캐스팅
+        // List<Article> saved = (List<Article>)articleRepository.findAll();
+        // 업캐스팅
+        // Iterable<Article> saved = articleRepository.findAll();
+        // ArrayList
+        ArrayList<Article> articles = articleRepository.findAll();
+        // 모델에 데이터 등록
+        model.addAttribute("articles", articles);
+        return "articles/list";
+    }
+    @GetMapping("/img")
+    public String articleImg(Model model){
+        model.addAttribute("imgPath", "/img.jpg");
+        return "img";
+    }
+    @GetMapping("/articles/{id}/edit")
+    public String editArticle(@PathVariable Long id, Model model){
+        // id 기준으로 db에 존재하는지 확인
+        Article saved = articleRepository.findById(id).orElse(null);
+        // 게시글을 모델에 등록
+        model.addAttribute("article", saved);
+        // 게시글을 view로 전달
+        return "articles/edit";
+    }
+    @PostMapping("/article/update")
+    public String updateArticle(ArticleForm articleForm){
+        // dto -> entity
+        // entity -> repo로 db 저장
+        // view 출력
+        return "";
+    }
+}
