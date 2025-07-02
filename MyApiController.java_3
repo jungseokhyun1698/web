@@ -1,0 +1,12 @@
+package com.example.kopoproject.api;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController // REST API Class로 선언
+public class MyApiController {
+    @GetMapping("/api/hello")
+    public String hello(){
+        return "Hello World";
+    }
+}
