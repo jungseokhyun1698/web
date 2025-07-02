@@ -1,0 +1,86 @@
+package com.example.kopoproject.api;
+
+import com.example.kopoproject.dto.ArticleForm;
+import com.example.kopoproject.entity.Article;
+import com.example.kopoproject.repository.ArticleRepository;
+import com.example.kopoproject.service.ArticleService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@Slf4j
+public class ArticleApiController {
+    @Autowired
+    private ArticleService articleService;
+//    @Autowired
+//    private ArticleRepository articleRepository;
+    // Get
+    @GetMapping("/api/articles") // 전체 게시글 확인
+    public List<Article> articles(){
+//        return articleRepository.findAll();
+        return articleService.articles();
+    }
+    // 단일 게시물 조회
+    @GetMapping("/api/article/{id}")
+    public Article article(@PathVariable Long id){
+//        return articleRepository.findById(id).orElse(null);
+        return articleService.article(id);
+    }
+    // Post
+    @PostMapping("/api/articles")
+    public ResponseEntity<Article> createArticle(@RequestBody ArticleForm dto){
+//        Article article = dto.toEntity();
+//        return articleRepository.save(article);
+        Article created = articleService.create(dto);
+        // (조건식) ? True : False;
+        return (created != null) ? ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    // Patch
+    @PatchMapping("/api/article/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody ArticleForm dto){
+        Article updated = articleService.update(id, dto);
+//        // dto -> entity
+//        Article article = dto.toEntity();
+//        log.info("url_id = " + id + ", " + article.toString());
+//        // data validation
+//        Article dbData = articleRepository.findById(id).orElse(null);
+//        // if wrong request -> process
+//        if(dbData == null || id != article.getId()){
+//            // 잘못된 경우의 처리
+//            log.info("잘못된 요청으로 인한 로그 남김");
+//            log.info("url_id = " + id + ", " + article.toString());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//        // update & response
+//        // 변경 요청온 부분만 업데이트를 할 수 있도록 처리 = patch() 함수에서 처리
+//        dbData.patch(article);
+//        Article updated = articleRepository.save(dbData);
+//        log.info("updated = " + updated.toString());
+//        return ResponseEntity.status(HttpStatus.OK).body(updated);
+        return (updated != null) ? ResponseEntity.status(HttpStatus.OK).body(updated) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    // Delete
+    @DeleteMapping("/api/article/{id}")
+    public ResponseEntity<Article> deleteArticle(@PathVariable Long id){
+        Article deleted = articleService.delete(id);
+//        // db에 데이터 존재하는지 체크
+//        Article saved = articleRepository.findById(id).orElse(null);
+//        // 데이터가 없다면 요청 실패 처리
+//        if(saved == null){
+//            log.info("존재하지 않는 데이터입니다.");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//        // 데이터가 있다면 삭제하고 응답
+//        articleRepository.delete(saved);
+//        return ResponseEntity.status(HttpStatus.OK).build();
+        return (deleted != null) ? ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+}
