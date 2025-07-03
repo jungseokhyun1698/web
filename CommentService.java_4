@@ -1,0 +1,66 @@
+package com.example.kopoproject.service;
+
+import com.example.kopoproject.dto.CommentDto;
+import com.example.kopoproject.entity.Article;
+import com.example.kopoproject.entity.Comment;
+import com.example.kopoproject.repository.ArticleRepository;
+import com.example.kopoproject.repository.CommentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class CommentService {
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    public List<CommentDto> comments(Long articleId) {
+        // 댓글을 DB 조회
+        List<Comment> comments = commentRepository.findByArticleId(articleId);
+        // 엔티티 -> DTO 변환
+//        List<CommentDto> dtos = new ArrayList<CommentDto>();
+//        for(int i = 0; i < comments.size(); i++){
+//            Comment comment = comments.get(i);
+//            CommentDto dto = CommentDto.createCommentDto(comment);
+//            dtos.add(dto);
+//        }
+        // 리턴
+//        return dtos;
+        return commentRepository.findByArticleId(articleId)
+                .stream()
+                .map(comment -> CommentDto.createCommentDto(comment))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional // 저장 후 에러 발생 시 롤백
+    public CommentDto createComment(Long articleId, CommentDto commentDto) {
+        // 게시글 존재하는지 조회
+        Article article = articleRepository.findById(articleId).orElseThrow(
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        // 댓글 엔티티 생성
+        Comment comment = Comment.createComment(commentDto, article);
+        // 엔티티를 db 저장
+        Comment saved = commentRepository.save(comment);
+        // DTO로 변환해서 반환
+        return CommentDto.createCommentDto(saved);
+    }
+
+    @Transactional
+    public CommentDto updateComment(Long id, CommentDto commentDto) {
+        // 댓글 조회
+        Comment saved = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("수정할 댓글이 없어요 ㅠ"));
+        // 댓글 수정
+        saved.patch(commentDto);
+        // DB 업데이트
+        Comment updated = commentRepository.save(saved);
+        // dto 변화 후 응답
+        return CommentDto.createCommentDto(updated);
+    }
+}
