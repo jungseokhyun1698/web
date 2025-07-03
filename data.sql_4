@@ -1,0 +1,12 @@
+INSERT INTO article(title, content) VALUES('김삿갓', '안녕하세요 정치외교학과입니다.');
+INSERT INTO article(title, content) VALUES('이몽룡', '안녕하세요 외교학과입니다.');
+INSERT INTO article(title, content) VALUES('한석봉', '안녕하세요 컴퓨터공학과입니다.');
+INSERT INTO comment(article_id, nickname, body) VALUES(1, '파이썬당', 'ㅎㅎ어서오게');
+INSERT INTO comment(article_id, nickname, body) VALUES(1, '자바당', '1등 노잼 2등으로 오셈');
+INSERT INTO comment(article_id, nickname, body) VALUES(1, '우당탕당', '-_-');
+INSERT INTO comment(article_id, nickname, body) VALUES(2, '고시생', '동지여~');
+INSERT INTO comment(article_id, nickname, body) VALUES(2, '자바당', '좋을때다ㅋ');
+INSERT INTO comment(article_id, nickname, body) VALUES(2, '신입사원', '너도 좋을 때임');
+INSERT INTO comment(article_id, nickname, body) VALUES(3, '모모', '곤니찌와~');
+INSERT INTO comment(article_id, nickname, body) VALUES(3, '리사', '싸왔디 캅~');
+INSERT INTO comment(article_id, nickname, body) VALUES(3, '자바당', '헬로우~');
