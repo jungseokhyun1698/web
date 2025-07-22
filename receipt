@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Mart 영수증 (Java Equivalent)</title>
+</head>
+<body>
+    <script>
+        function main() {
+            var k34_itemname = [
+                "노브랜드 국산콩두부300g*2입", "노브랜드 굿모닝 굿밀크 1L", "삼다수 제주삼다수 그린 2L 6병", "노브랜드 미네랄워터 2L*6",
+                "맑은물에 총두부 550g", "풀무원 특등급 국산콩 투컵두부", "삼립 로만밀 통밀식빵 420g", "이맛쌀 20kg",
+                "노브랜드 우리 쌀밥 한공기 210g", "한국야쿠르트 윌 오리지날 150mlX5개", "서울우유 생크림 500ml", "피코크 전주식 콩나물해장국 500g",
+                "피코크 1+등급 더 노란 통통란 15개입 (특란,900g)", "서울우유 서울우유 (200ml*3개)", "하이트진로 [무알콜] 하이트 제로 350ml", "서울우유 커피우유 200ml*3입",
+                "노브랜드 현미쌀밥한공기210g", "노브랜드 우리쌀밥한공기 210g*12개", "서울우유 저지방 우유 2.3L", "노브랜드 그릴 닭가슴살 140g",
+                "노브랜드 쇠고기 사골미역국 500g", "리얼밀 정성이 가득한 고소한두부 1kg", "에치와이 [한국야쿠르트] 윌 저지방 150mlX5개", "피코크 에이클래스 고칼슘 슬라이스치즈 210g (30gX7)",
+                "노브랜드 별미 볶음김치 400g", "한국야쿠르트 피로케어 쿠퍼스 140mlX4개", "피코크 정갈한 쇠고기무국 500g", "서울우유 저지방 우유 200ml*3입",
+                "서울우유 속편한 우유 저지방 (900ml*2)", "상하목장 유기농 저지방우유 900ml", "피코크 무교동식 북엇국 500g", "풀무원 돌얼음 3kg"
+            ];
+            var k34_itemprice = [
+                3480, 1890, 5400, 1980, 1950, 5480, 3280, 51900, 950, 8000, 6580, 3980, 7480, 3180, 1380, 2580, 980, 10800, 7540, 2480, 2480, 2980, 8000, 3980, 3580, 10800, 4980, 3180, 6180, 4990, 4580, 4480
+            ];
+            var k34_itemamount = [
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+            ];
+            var k34_itemtax = [
+                false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, true, true, false, false, false, false, false, false, false, false, true, true, true, false, false
+            ];
+            var k34_tax_rate = 0.1;
+            var k34_totalpoint = 5473;
+            function k34_df_format(num) {
+                var s = String(num);
+                s = s.replace(/,/g, '');
+                return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+            var k34_calt_time = new Date();
+            var k34_sdt_format = function(date) {
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                var hours = String(date.getHours()).padStart(2, '0');
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            };
+            var k34_sdt2_format = function(date) {
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                return `${year}${month}${day}`;
+            };
+            function bblank(k34_str, k34_print_len) {
+                var k34_ret = "";
+                var k34_prtCnt = 0;
+                for (var k34_i = 0; k34_i < k34_str.length; k34_i++) {
+                    var k34_a = k34_str.charAt(k34_i);
+                    var charCode = k34_a.charCodeAt(0);
+                    var k34_a_bytes_length = (charCode >= 0xAC00 && charCode <= 0xD7A3) ? 2 : 1;
+                    if ((k34_prtCnt + k34_a_bytes_length) > k34_print_len) {
+                        break;
+                    }
+                    k34_prtCnt = k34_prtCnt + k34_a_bytes_length;
+                    k34_ret = k34_ret + k34_a;
+                }
+                var k34_cntBlank = k34_print_len - k34_prtCnt;
+                for (var k34_i = 0; k34_i < k34_cntBlank; k34_i++) {
+                    k34_ret = k34_ret + " ";
+                }
+                return k34_ret;
+            }
+            document.write('<pre>');
+            document.write("   emart" + "이마트 죽전점 (031)888-1234".padStart(25, ' ') + "\n");
+            document.write(" ".repeat(28 - "206-86-50913 강희석".length) + "206-86-50913 강희석" + "\n");
+            document.write(" ".repeat(27 - "용인 수지구 포은대로 552".length) + "용인 수지구 포은대로 552" + "\n\n");
+            document.write("영수증 미지참시 교환/환불 불가\n");
+            document.write("정상상품에 한함, 30일 이내(신선 7일)\n");
+            document.write("※일부 브랜드매장 제외(매장 고지물참조)\n");
+            document.write("교환/환불 구매점에서 가능(결제카드 지참)\n\n");
+            document.write("[구 매]" + k34_sdt_format(k34_calt_time) + "POS:0011-9861".padStart(18, ' ') + "\n");
+            document.write("-----------------------------------------\n");
+            document.write("   상 품 명" + " ".repeat(13 - "단 가".length) + "단 가" + " ".repeat(4 - "수량".length) + "수량" + " ".repeat(7 - "금 액".length) + "금 액" + "\n");
+            var k34_totalprice = 0;
+            var k34_totaletaxprice = 0;
+            var k34_totalitaxprice = 0;
+            var k34_itemetaxprice = 0;
+            var k34_itemitaxprice = 0;
+            for (var k34_i = 0; k34_i < k34_itemname.length; k34_i++) {
+                var k34_itemtotal = k34_itemprice[k34_i] * k34_itemamount[k34_i];
+                if (k34_i % 5 == 0 && k34_i != 0) {
+                    document.write("-----------------------------------------\n");
+                }
+                k34_totalprice = k34_totalprice + k34_itemtotal;
+                if (k34_itemtax[k34_i] == true) {
+                    k34_itemetaxprice = k34_itemprice[k34_i] * k34_itemamount[k34_i];
+                    k34_totaletaxprice = k34_totaletaxprice + k34_itemetaxprice;
+                    document.write("*" + bblank(k34_itemname[k34_i], 16) + k34_df_format(k34_itemprice[k34_i]).padStart(10, ' ') + k34_df_format(k34_itemamount[k34_i]).padStart(3, ' ') + k34_df_format(k34_itemtotal).padStart(11, ' ') + "\n");
+                } else {
+                    k34_itemitaxprice = k34_itemprice[k34_i] * k34_itemamount[k34_i];
+                    k34_totalitaxprice = k34_totalitaxprice + k34_itemitaxprice;
+                    document.write(" " + bblank(k34_itemname[k34_i], 16) + k34_df_format(k34_itemprice[k34_i]).padStart(10, ' ') + k34_df_format(k34_itemamount[k34_i]).padStart(3, ' ') + k34_df_format(k34_itemtotal).padStart(11, ' ') + "\n");
+                }
+            }
+            document.write("-----------------------------------------\n");
+            var k34_point = Math.floor(k34_totalprice / 1000);
+            var k34_itaxprice = Math.floor(k34_totalitaxprice / (1 + k34_tax_rate) + 0.00000001);
+            var k34_taxprice = k34_totalitaxprice - k34_itaxprice;        
+            document.write("\n");
+            document.write(" ".repeat(22 - "총 품목 수량".length) + "총 품목 수량" + k34_df_format(k34_itemname.length).padStart(14, ' ') + "\n");
+            document.write(" ".repeat(23 - "(*)면 세  물 품".length) + "(*)면 세  물 품" + k34_df_format(k34_totaletaxprice).padStart(14, ' ') + "\n");
+            document.write(" ".repeat(23 - "과 세  물 품".length) + "과 세  물 품" + k34_df_format(k34_itaxprice).padStart(14, ' ') + "\n");
+            document.write(" ".repeat(24 - "부   가   세".length) + "부   가   세" + k34_df_format(k34_taxprice).padStart(14, ' ') + "\n");
+            document.write(" ".repeat(25 - "합        계".length) + "합        계" + k34_df_format(k34_totalprice).padStart(14, ' ') + "\n");
+            document.write("결 제 대 상 금 액" + k34_df_format(k34_totalprice).padStart(24, ' ') + "\n");
+            document.write("-----------------------------------------\n");
+            document.write("0012 KEB 하나" + "541707**0484/35860658".padStart(28, ' ') + "\n");
+            document.write("카드결제(IC)" + "일시불 /".padStart(14, ' ') + k34_df_format(k34_totalprice).padStart(12, ' ') + "\n");
+            document.write("-----------------------------------------\n");
+            document.write(" ".repeat(22 - "[신세계포인트 적립]".length) + "[신세계포인트 적립]" + "\n");
+            document.write("홍*두 고객님의 포인트 현황입니다.\n");
+            document.write("금회발생포인트" + "9350**9995".padStart(17, ' ') + k34_df_format(k34_point).padStart(10, ' ') + "\n");
+            document.write("누계(가용)포인트" + k34_df_format(k34_totalpoint + k34_point).padStart(14, ' ') + "(" + k34_df_format(k34_totalpoint).padStart(9, ' ') + ")\n");
+            k34_totalpoint = k34_totalpoint + k34_point;
+            document.write("*신세계포인트 유효기간은 2년입니다.\n");
+            document.write("-----------------------------------------\n");
+            document.write(" ".repeat(21 - "구매금액기준 무료주차시간 자동부여".length) + "구매금액기준 무료주차시간 자동부여" + "\n");
+            document.write("차량번호 :" + "34저****".padStart(30, ' ') + "\n");
+            document.write("입차시간 :");
+            var k34_now_js = new Date();
+            var k34_cartime_obj = new Date(k34_now_js.getTime() - (60 * 60 * 1000));
+            var k34_cartime_year = k34_cartime_obj.getFullYear();
+            var k34_cartime_month = String(k34_cartime_obj.getMonth() + 1).padStart(2, '0');
+            var k34_cartime_day = String(k34_cartime_obj.getDate()).padStart(2, '0');
+            var k34_cartime_hours = String(k34_cartime_obj.getHours()).padStart(2, '0');
+            var k34_cartime_minutes = String(k34_cartime_obj.getMinutes()).padStart(2, '0');
+            var k34_cartime_seconds = String(k34_cartime_obj.getSeconds()).padStart(2, '0');
+            var k34_cartime_formatted = `${k34_cartime_year}-${k34_cartime_month}-${k34_cartime_day} ${k34_cartime_hours}:${k34_cartime_minutes}:${k34_cartime_seconds}`;
+            document.write(k34_cartime_formatted.padStart(31, ' ') + "\n");
+            document.write("-----------------------------------------\n");
+            document.write("캐셔:084599 양00" + "1150".padStart(25, ' ') + "\n");
+            document.write(k34_sdt2_format(k34_calt_time).padStart(14, ' ') + "/00119861/00164980/31\n");
+            document.write('</pre>');
+        }
+        main();
+    </script>
+</body>
+</html>
