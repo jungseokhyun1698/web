@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartNew.js - 20명 점수 막대 그래프</title>
+    <script src='https://rawgit.com/FVANCOP/ChartNew.js/master/ChartNew.js'></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        canvas {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 90%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>20명의 점수 막대 그래프</h1>
+    <canvas id="scoreChart" width="800" height="500"></canvas>
+    <script>
+        function generateRandomScores(numStudents) {
+            var scores = [];
+            for (var i = 0; i < numStudents; i++) {
+                scores.push(Math.floor(Math.random() * 101));
+            }
+            return scores;
+        }
+        function drawScoreChart() {
+            var numStudents = 20;
+            var studentLabels = [];
+            for(var i = 0; i < numStudents; i++) {
+                studentLabels.push(i + 1);
+            }
+            var randomScores = generateRandomScores(numStudents);
+            var chartData = {
+                labels: studentLabels,
+                datasets: [
+                    {
+                        label: "점수",
+                        fillColor: "rgba(255, 99, 132, 0.5)",
+                        strokeColor: "rgba(255, 99, 132, 0.8)",
+                        highlightFill: "rgba(255, 99, 132, 0.75)",
+                        highlightStroke: "rgba(255, 99, 132, 1)",
+                        data: randomScores
+                    }
+                ]
+            };
+            var ctx = document.getElementById("scoreChart").getContext("2d");
+            if (window.myScoreBarChart) {
+                window.myScoreBarChart.destroy();
+            }
+            window.myScoreBarChart = new Chart(ctx).Bar(chartData, {
+                responsive: true,
+                barShowStroke: true,
+                barStrokeWidth: 1,
+                barValueSpacing: 5,
+                barDatasetSpacing: 1,
+                scaleOverride: true,
+                scaleSteps: 10,
+                scaleStepWidth: 10,
+                scaleStartValue: 0
+            });
+        }
+        window.onload = drawScoreChart;
+    </script>
+</body>
+</html>
