@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성적집계표 (Java Equivalent)</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Courier New', 'Malgun Gothic', 'Dotum', monospace;
+            font-size: 13px;
+            white-space: pre;
+            line-height: 1.3;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function InputData(k34_iPerson) {
+            this.k34_name = new Array(k34_iPerson);
+            this.k34_kor = new Array(k34_iPerson);
+            this.k34_eng = new Array(k34_iPerson);
+            this.k34_mat = new Array(k34_iPerson);
+            this.k34_sum = new Array(k34_iPerson);
+            this.k34_ave = new Array(k34_iPerson);
+            this.SetData = function(k34_i, k34_name_val, k34_kor_val, k34_eng_val, k34_mat_val, k34_sum_val, k34_ave_val) {
+                this.k34_name[k34_i] = k34_name_val;
+                this.k34_kor[k34_i] = k34_kor_val;
+                this.k34_eng[k34_i] = k34_eng_val;
+                this.k34_mat[k34_i] = k34_mat_val;
+                this.k34_sum[k34_i] = k34_sum_val;
+                this.k34_ave[k34_i] = k34_ave_val;
+            };
+        }
+        function main() {
+            var k34_iPerson = 30;
+            var k34_inData = new InputData(k34_iPerson);
+            for (var k34_i = 0; k34_i < k34_iPerson; k34_i++) {
+                var k34_name = `홍길${String(k34_i + 1).padStart(2, '0')}`;
+                var k34_kor = Math.floor(Math.random() * 100);
+                var k34_eng = Math.floor(Math.random() * 100);
+                var k34_mat = Math.floor(Math.random() * 100);
+                var k34_sum = k34_kor + k34_eng + k34_mat;
+                var k34_ave = (k34_kor + k34_eng + k34_mat) / 3.0;
+                k34_inData.SetData(k34_i, k34_name, k34_kor, k34_eng, k34_mat, k34_sum, k34_ave);
+            }
+            document.write('<pre>');
+            document.write("성적집계표".padStart(33, ' ') + "\n");
+            var k34_calt_time = new Date();
+            var k34_sdt_format = function(date) {
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                var hours = String(date.getHours()).padStart(2, '0');
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                var seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+            };
+            document.write("출력일자 : ".padStart(43, ' ') + k34_sdt_format(k34_calt_time) + "\n");
+            document.write("==================================================================\n");
+            document.write("번호" + "이름".padStart(6, ' ') + "국어".padStart(12, ' ') + "영어".padStart(8, ' ') + "수학".padStart(8, ' ') + "총점".padStart(8, ' ') + "평균".padStart(8, ' ') + "\n");
+            document.write("==================================================================\n");
+            var k34_totalkor = 0;
+            var k34_totaleng = 0;
+            var k34_totalmat = 0;
+            var k34_totalsum = 0;
+            var k34_totalave = 0;
+            for (var k34_i = 0; k34_i < k34_iPerson; k34_i++) {
+                document.write(
+                    String(k34_i + 1).padStart(3, '0') +
+                    k34_inData.k34_name[k34_i].padStart(7, ' ') +
+                    String(k34_inData.k34_kor[k34_i]).padStart(13, ' ') +
+                    String(k34_inData.k34_eng[k34_i]).padStart(10, ' ') +
+                    String(k34_inData.k34_mat[k34_i]).padStart(10, ' ') +
+                    String(k34_inData.k34_sum[k34_i]).padStart(10, ' ') +
+                    k34_inData.k34_ave[k34_i].toFixed(2).padStart(11, ' ') + "\n"
+                );
+                k34_totalkor = k34_totalkor + k34_inData.k34_kor[k34_i];
+                k34_totaleng = k34_totaleng + k34_inData.k34_eng[k34_i];
+                k34_totalmat = k34_totalmat + k34_inData.k34_mat[k34_i];
+                k34_totalsum = k34_totalsum + k34_inData.k34_sum[k34_i];
+                k34_totalave = k34_totalave + k34_inData.k34_ave[k34_i];
+            }
+            document.write("==================================================================\n");
+            document.write("현재페이지\n");
+            document.write(
+                "합계" +
+                String(k34_totalkor).padStart(21, ' ') +
+                String(k34_totaleng).padStart(10, ' ') +
+                String(k34_totalmat).padStart(10, ' ') +
+                String(k34_totalsum).padStart(10, ' ') +
+                k34_totalave.toFixed(2).padStart(11, ' ') + "\n"
+            );
+            document.write(
+                "평균" +
+                String(Math.floor(k34_totalkor / k34_iPerson)).padStart(21, ' ') +
+                String(Math.floor(k34_totaleng / k34_iPerson)).padStart(10, ' ') +
+                String(Math.floor(k34_totalmat / k34_iPerson)).padStart(10, ' ') +
+                String(Math.floor(k34_totalsum / k34_iPerson)).padStart(10, ' ') +
+                (k34_totalave / k34_iPerson).toFixed(2).padStart(11, ' ') + "\n"
+            );
+            document.write('</pre>');
+        }
+        main();
+    </script>
+</body>
+</html>
