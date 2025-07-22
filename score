@@ -83,7 +83,6 @@
                 k34_totalave = k34_totalave + k34_inData.k34_ave[k34_i];
             }
             document.write("==================================================================\n");
-            document.write("현재페이지\n");
             document.write(
                 "합계" +
                 String(k34_totalkor).padStart(21, ' ') +
